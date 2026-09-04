@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>청년새마을연대 가입 신청 — 이천시청년새마을연대</title>
+<meta name="description" content="이천시청년새마을연대 회원 가입 신청서. 새마을운동 활동지원 및 탄소중립 홍보·실천에 함께해 주세요.">
+<meta property="og:title" content="청년새마을연대 가입 신청">
+<meta property="og:description" content="이천시청년새마을연대와 함께해 주세요 — 새마을운동 활동지원 · 탄소중립 홍보 및 실천">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+<style>
+:root{
+  --green-deep:#1e4d2b;
+  --green:#2e7d46;
+  --green-soft:#e8f3ec;
+  --green-line:#cde5d6;
+  --ink:#1d1d1f;
+  --ink-2:#515052;
+  --ink-3:#86868b;
+  --bg:#f5f5f7;
+  --card:#ffffff;
+  --line:#e8e8ed;
+  --danger:#ff3b30;
+  --radius:20px;
+  font-size:17px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro KR","SF Pro Display","Apple SD Gothic Neo","Pretendard","Noto Sans KR","Segoe UI",Roboto,sans-serif;
+  background:var(--bg);color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:-0.015em;
+  line-height:1.5;
+}
+/* ── nav ─────────────────────────── */
+.nav{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  background:rgba(245,245,247,.72);
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.nav-inner{max-width:720px;margin:0 auto;padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nav-title{font-size:15px;font-weight:600;color:var(--ink)}
+.nav-badge{font-size:12px;font-weight:600;color:var(--green-deep);background:var(--green-soft);border:1px solid var(--green-line);padding:4px 12px;border-radius:999px}
+/* ── hero ─────────────────────────── */
+.hero{max-width:720px;margin:0 auto;padding:64px 24px 40px;text-align:center}
+.hero img{width:min(300px,64vw);height:auto;margin-bottom:28px}
+.hero .eyebrow{font-size:15px;font-weight:600;color:var(--green);margin-bottom:10px;letter-spacing:.02em}
+.hero h1{font-size:clamp(34px,7vw,48px);font-weight:700;letter-spacing:-0.03em;line-height:1.12}
+.hero h1 .accent{color:var(--green-deep)}
+.hero p.sub{margin-top:16px;font-size:clamp(17px,3.5vw,20px);color:var(--ink-3);font-weight:400}
+/* ── layout ───────────────────────── */
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 90px;display:flex;flex-direction:column;gap:22px}
+.card{
+  background:var(--card);border-radius:var(--radius);
+  padding:30px 26px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 30px rgba(0,0,0,.05);
+}
+.card h2{font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px}
+.card .hint{font-size:14px;color:var(--ink-3);margin-bottom:22px}
+/* ── org card ─────────────────────── */
+.org{background:linear-gradient(135deg,#1e4d2b 0%,#2e7d46 100%);color:#fff}
+.org h2{color:#fff}
+.org .hint{color:rgba(255,255,255,.65)}
+.org-grid{display:grid;grid-template-columns:92px 1fr;row-gap:13px;column-gap:16px;font-size:15.5px}
+.org-grid dt{color:rgba(255,255,255,.62);font-weight:500}
+.org-grid dd{font-weight:600}
+.org-desc{margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.18);font-size:15px;color:rgba(255,255,255,.88);line-height:1.6}
+/* ── fields ───────────────────────── */
+.field{margin-bottom:20px}
+.field:last-child{margin-bottom:0}
+label.lbl{display:block;font-size:14px;font-weight:600;color:var(--ink-2);margin-bottom:8px}
+label.lbl .req{color:var(--danger);margin-left:2px}
+input[type=text],input[type=tel],input[type=email],input[type=date],textarea{
+  width:100%;font:inherit;font-size:17px;color:var(--ink);
+  background:var(--bg);border:1.5px solid transparent;border-radius:14px;
+  padding:14px 16px;outline:none;
+  transition:border-color .2s,background .2s,box-shadow .2s;
+  appearance:none;-webkit-appearance:none;
+}
+input:focus,textarea:focus{
+  background:#fff;border-color:var(--green);
+  box-shadow:0 0 0 4px rgba(46,125,70,.14);
+}
+input::placeholder{color:#b0b0b6}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:480px){.row{grid-template-columns:1fr}}
+/* segmented control */
+.seg{display:flex;background:var(--bg);border-radius:14px;padding:4px;gap:4px}
+.seg input{display:none}
+.seg label{
+  flex:1;text-align:center;font-size:16px;font-weight:500;color:var(--ink-2);
+  padding:11px 0;border-radius:11px;cursor:pointer;
+  transition:all .22s cubic-bezier(.3,.7,.4,1);
+}
+.seg input:checked+label{
+  background:#fff;color:var(--green-deep);font-weight:700;
+  box-shadow:0 1px 3px rgba(0,0,0,.1),0 3px 10px rgba(0,0,0,.06);
+}
+.age-chip{
+  display:none;margin-top:8px;font-size:13.5px;font-weight:600;color:var(--green-deep);
+  background:var(--green-soft);border:1px solid var(--green-line);
+  padding:4px 12px;border-radius:999px;width:fit-content;
+}
+.age-chip.show{display:inline-block;animation:pop .3s cubic-bezier(.3,1.4,.5,1)}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+/* ── privacy ──────────────────────── */
+.privacy-box{
+  background:var(--bg);border-radius:14px;padding:18px 18px;
+  font-size:13.5px;color:var(--ink-2);line-height:1.65;
+  max-height:230px;overflow-y:auto;margin-bottom:18px;
+}
+.privacy-box strong{color:var(--ink);display:block;margin-bottom:2px}
+.privacy-box ol{padding-left:18px;display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.consent{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:16px 18px;background:var(--green-soft);border:1px solid var(--green-line);
+  border-radius:14px;cursor:pointer;user-select:none;
+}
+.consent .txt{font-size:15.5px;font-weight:600;color:var(--green-deep)}
+.consent .txt small{display:block;font-size:12.5px;font-weight:500;color:var(--green);margin-top:1px}
+/* apple switch */
+.switch{position:relative;width:51px;height:31px;flex-shrink:0}
+.switch input{display:none}
+.switch .track{
+  position:absolute;inset:0;background:#d5d5da;border-radius:999px;
+  transition:background .25s;
+}
+.switch .knob{
+  position:absolute;top:2px;left:2px;width:27px;height:27px;background:#fff;border-radius:50%;
+  box-shadow:0 2px 5px rgba(0,0,0,.2);
+  transition:transform .25s cubic-bezier(.3,.9,.4,1.2);
+}
+.switch input:checked~.track{background:var(--green)}
+.switch input:checked~.knob{transform:translateX(20px)}
+/* ── declaration + submit ─────────── */
+.decl{text-align:center;font-size:15px;color:var(--ink-2);line-height:1.7;padding:6px 8px}
+.decl b{color:var(--ink)}
+.decl .date{margin-top:10px;font-size:14px;color:var(--ink-3)}
+.decl .dest{margin-top:2px;font-size:14px;font-weight:600;color:var(--ink-2)}
+.btn{
+  width:100%;border:0;font:inherit;font-size:18px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#2e7d46,#1e4d2b);
+  padding:17px;border-radius:16px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(30,77,43,.28);
+  transition:transform .18s,box-shadow .18s,opacity .2s;
+}
+.btn:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(30,77,43,.34)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
+.footer{max-width:720px;margin:0 auto;padding:0 24px 60px;text-align:center;font-size:12.5px;color:var(--ink-3);line-height:1.7}
+/* ── success overlay ──────────────── */
+.overlay{
+  position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
+  background:rgba(245,245,247,.6);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  padding:24px;
+}
+.overlay.show{display:flex;animation:fadein .35s}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.done-card{
+  background:#fff;border-radius:26px;padding:48px 36px;max-width:400px;width:100%;text-align:center;
+  box-shadow:0 24px 70px rgba(0,0,0,.16);
+  animation:rise .45s cubic-bezier(.2,1.2,.4,1);
+}
+@keyframes rise{from{transform:translateY(26px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.check-ring{
+  width:84px;height:84px;margin:0 auto 24px;border-radius:50%;
+  background:linear-gradient(135deg,#2e7d46,#1e4d2b);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 30px rgba(30,77,43,.35);
+}
+.check-ring svg{width:40px;height:40px}
+.check-ring path{stroke:#fff;stroke-width:6;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:60;stroke-dashoffset:60;animation:draw .5s .25s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.done-card h3{font-size:24px;font-weight:700;letter-spacing:-0.02em;margin-bottom:10px}
+.done-card p{font-size:15.5px;color:var(--ink-3);line-height:1.6;margin-bottom:28px}
+.done-card button{
+  font:inherit;font-size:16px;font-weight:600;color:var(--green-deep);
+  background:var(--green-soft);border:1px solid var(--green-line);
+  padding:12px 34px;border-radius:999px;cursor:pointer;
+}
+.spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;vertical-align:-4px;margin-right:8px;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-title">이천시청년새마을연대</span>
+    <span class="nav-badge">가입 신청</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <img src="logo.png" alt="이천시청년새마을연대 로고">
+  <div class="eyebrow">새마을운동중앙회 「청년새마을연대」</div>
+  <h1>함께 만드는 내일,<br><span class="accent">가입 신청</span></h1>
+  <p class="sub">이천시 새마을운동 활동지원 · 탄소중립 홍보 및 실천</p>
+</header>
+
+<form id="joinForm" class="wrap" novalidate>
+
+  <!-- 소속 -->
+  <section class="card org">
+    <h2>소속 안내</h2>
+    <p class="hint">신청서가 접수되는 소속 단체 정보입니다</p>
+    <dl class="org-grid">
+      <dt>기관명</dt><dd>새마을운동이천시지회</dd>
+      <dt>단체명</dt><dd>이천시청년새마을연대</dd>
+      <dt>소재지</dt><dd>경기도 이천시</dd>
+    </dl>
+    <p class="org-desc">이천시 새마을운동 활동지원 및 탄소중립 홍보·실천을 위해 활동하는 청년 단체입니다.</p>
+  </section>
+
+  <!-- 인적사항 -->
+  <section class="card">
+    <h2>신청인 인적사항</h2>
+    <p class="hint">가입 신청서에 기재될 정보를 입력해 주세요</p>
+
+    <div class="field">
+      <label class="lbl" for="name">성명<span class="req">*</span></label>
+      <input type="text" id="name" name="name" placeholder="홍길동" autocomplete="name" required>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label class="lbl">성별<span class="req">*</span></label>
+        <div class="seg">
+          <input type="radio" id="gM" name="gender" value="남성" required><label for="gM">남성</label>
+          <input type="radio" id="gF" name="gender" value="여성"><label for="gF">여성</label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="lbl" for="birthdate">생년월일<span class="req">*</span></label>
+        <input type="date" id="birthdate" name="birthdate" required>
+        <span class="age-chip" id="ageChip"></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label class="lbl" for="phone">연락처<span class="req">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="010-0000-0000" autocomplete="tel" inputmode="numeric" required>
+      </div>
+      <div class="field">
+        <label class="lbl" for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="lbl" for="address">주소<span class="req">*</span></label>
+      <input type="text" id="address" name="address" placeholder="경기도 이천시 ○○동" autocomplete="street-address" required>
+    </div>
+  </section>
+
+  <!-- 개인정보 동의 -->
+  <section class="card">
+    <h2>개인정보 수집·이용 동의</h2>
+    <p class="hint">아래 내용을 확인하신 후 동의해 주세요</p>
+    <div class="privacy-box">
+      <ol>
+        <li><strong>개인정보의 수집·이용 목적</strong>청년새마을연대 회원 등록 및 관리</li>
+        <li><strong>수집하는 개인정보의 항목</strong>성명, 생년월일, 소속, 주소, 연락처(휴대전화), 주요경력</li>
+        <li><strong>개인정보의 보유 및 이용기간</strong>등록일로부터 청년새마을연대 탈퇴 시까지</li>
+        <li><strong>동의를 거부할 권리</strong>귀하는 위와 같은 개인정보를 수집·이용하는 데에 대한 동의를 거부할 권리가 있습니다. 다만 동의를 거부하실 경우 회원 가입이 제한될 수 있습니다.</li>
+      </ol>
+    </div>
+    <label class="consent" for="privacy">
+      <span class="txt">위의 내용에 동의합니다<small>개인정보 수집·이용 동의 (필수)</small></span>
+      <span class="switch">
+        <input type="checkbox" id="privacy" required>
+        <span class="track"></span><span class="knob"></span>
+      </span>
+    </label>
+  </section>
+
+  <!-- 선언 + 제출 -->
+  <section class="card">
+    <p class="decl">
+      위 신청인은 새마을운동중앙회 「청년새마을연대」 가입에 동의하며,<br>
+      <b>회원으로 가입할 것을 신청합니다.</b>
+      <span class="date" id="today"></span>
+      <span class="dest">(사)새마을운동중앙회 귀중</span>
+    </p>
+    <br>
+    <button type="submit" class="btn" id="submitBtn">가입 신청하기</button>
+  </section>
+</form>
+
+<p class="footer">이천시청년새마을연대 · 새마을운동이천시지회<br>제출하신 정보는 회원 등록 및 관리 목적으로만 사용됩니다.</p>
+
+<!-- 완료 오버레이 -->
+<div class="overlay" id="overlay">
+  <div class="done-card">
+    <div class="check-ring">
+      <svg viewBox="0 0 52 52"><path d="M14 27l8 8 16-18"/></svg>
+    </div>
+    <h3>신청이 접수되었습니다</h3>
+    <p>이천시청년새마을연대 가입 신청이<br>정상적으로 접수되었습니다.<br>담당자 확인 후 연락드리겠습니다.</p>
+    <button type="button" onclick="location.reload()">확인</button>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxm8hsBB8mqANklVvDL4yFjJOqdR70RHIN8V1-48h3eHLjlXLZgtVT-Kfv4rEvl0hVJ/exec';
+
+// 오늘 날짜
+const now = new Date();
+document.getElementById('today').textContent =
+  now.getFullYear() + '. ' + (now.getMonth() + 1) + '. ' + now.getDate() + '.';
+
+// 연락처 자동 하이픈
+const phone = document.getElementById('phone');
+phone.addEventListener('input', () => {
+  const d = phone.value.replace(/\D/g, '').slice(0, 11);
+  if (d.length > 7) phone.value = d.replace(/(\d{3})(\d{3,4})(\d{1,4})/, '$1-$2-$3');
+  else if (d.length > 3) phone.value = d.replace(/(\d{3})(\d+)/, '$1-$2');
+  else phone.value = d;
+});
+
+// 생년월일 → 연령 표시
+const birth = document.getElementById('birthdate');
+const ageChip = document.getElementById('ageChip');
+birth.addEventListener('change', () => {
+  if (!birth.value) { ageChip.classList.remove('show'); return; }
+  const b = new Date(birth.value);
+  let age = now.getFullYear() - b.getFullYear();
+  const m = now.getMonth() - b.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age--;
+  if (age >= 0 && age < 130) {
+    ageChip.textContent = '만 ' + age + '세';
+    ageChip.classList.add('show');
+  } else ageChip.classList.remove('show');
+});
+
+// 제출
+const form = document.getElementById('joinForm');
+const btn = document.getElementById('submitBtn');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!form.reportValidity()) return;
+  if (!document.getElementById('privacy').checked) {
+    alert('개인정보 수집·이용에 동의해 주세요.');
+    return;
+  }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>접수 중…';
+
+  const email = document.getElementById('email').value.trim();
+  const payload = {
+    name:       document.getElementById('name').value.trim(),
+    gender:     (form.querySelector('input[name=gender]:checked') || {}).value || '',
+    birthdate:  birth.value,
+    phone:      phone.value,
+    address:    document.getElementById('address').value.trim(),
+    job:        '',
+    motivation: email ? 'E-mail: ' + email : ''
+  };
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+    document.getElementById('overlay').classList.add('show');
+  } catch (err) {
+    alert('접수 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '가입 신청하기';
+  }
+});
+</script>
+</body>
+</html>
