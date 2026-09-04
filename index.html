@@ -351,15 +351,16 @@ form.addEventListener('submit', async (e) => {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>접수 중…';
 
-  const email = document.getElementById('email').value.trim();
   const payload = {
     name:       document.getElementById('name').value.trim(),
     gender:     (form.querySelector('input[name=gender]:checked') || {}).value || '',
+    birth:      birth.value,
     birthdate:  birth.value,
     phone:      phone.value,
+    email:      document.getElementById('email').value.trim(),
     address:    document.getElementById('address').value.trim(),
     job:        '',
-    motivation: email ? 'E-mail: ' + email : ''
+    motivation: ''
   };
 
   try {
