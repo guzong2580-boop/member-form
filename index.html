@@ -226,6 +226,12 @@ input::placeholder{color:#b0b0b6}
       <input type="text" id="name" name="name" placeholder="홍길동" autocomplete="name" required>
     </div>
 
+    <!-- 허니팟: 봇 차단용. 사람에겐 안 보이고 자동입력 봇만 채움 -->
+    <div style="position:absolute;left:-9999px;top:-9999px" aria-hidden="true">
+      <label for="website">Website</label>
+      <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+    </div>
+
     <div class="row">
       <div class="field">
         <label class="lbl">성별<span class="req">*</span></label>
@@ -360,7 +366,8 @@ form.addEventListener('submit', async (e) => {
     email:      document.getElementById('email').value.trim(),
     address:    document.getElementById('address').value.trim(),
     job:        '',
-    motivation: ''
+    motivation: '',
+    website:    document.getElementById('website').value
   };
 
   try {
