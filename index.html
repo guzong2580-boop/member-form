@@ -101,6 +101,7 @@ input:focus,textarea:focus{
   box-shadow:0 0 0 4px rgba(46,125,70,.14);
 }
 input::placeholder{color:#b0b0b6}
+.addr-detail{margin-top:8px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:480px){.row{grid-template-columns:1fr}}
 /* segmented control */
@@ -284,12 +285,15 @@ input::placeholder{color:#b0b0b6}
     </div>
 
     <div class="field">
-      <label class="lbl" for="dong">주소 — 읍·면·동<span class="req">*</span></label>
+      <label class="lbl" for="dong">주소 — 읍·면·동 + 상세주소<span class="req">*</span></label>
       <div class="region-wrap">
         <select id="dong" name="dong" required disabled>
           <option value="" selected disabled>먼저 위에서 시·군을 선택해 주세요</option>
         </select>
       </div>
+      <input type="text" id="addrDetail" name="addrDetail" class="addr-detail"
+             placeholder="상세주소 (예: 중리대로 123, ○○아파트 101동 1001호)"
+             autocomplete="address-line1" maxlength="80">
       <span class="age-chip" id="addrChip"></span>
     </div>
   </section>
@@ -383,10 +387,19 @@ function fillDong(r) {
     });
   });
 }
+const addrDetail = document.getElementById('addrDetail');
+function fullAddress() {
+  return (dongSel.value + ' ' + addrDetail.value.trim()).trim();
+}
+function paintAddrChip() {
+  if (!dongSel.value) { addrChip.classList.remove('show'); return; }
+  addrChip.textContent = fullAddress();
+  addrChip.classList.add('show');
+}
+addrDetail.addEventListener('input', paintAddrChip);
 dongSel.addEventListener('change', () => {
   dongSel.classList.add('filled');
-  addrChip.textContent = dongSel.value;
-  addrChip.classList.add('show');
+  paintAddrChip();
 });
 
 const heroLogo = document.getElementById('heroLogo');
@@ -466,7 +479,7 @@ form.addEventListener('submit', async (e) => {
     birthdate:  birth.value,
     phone:      phone.value,
     email:      document.getElementById('email').value.trim(),
-    address:    dongSel.value,
+    address:    fullAddress(),
     job:        '',
     motivation: '',
     website:    document.getElementById('website').value
