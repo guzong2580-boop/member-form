@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src https://script.google.com https://*.googleusercontent.com; base-uri 'none'; form-action 'self'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>담당자 관리 — 경기도청년새마을연합회</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+<style>
+:root{
+  --green-deep:#1e4d2b; --green:#2e7d46; --green-soft:#e8f3ec; --green-line:#cde5d6;
+  --ink:#1d1d1f; --ink-2:#515052; --ink-3:#86868b;
+  --bg:#f5f5f7; --card:#ffffff; --line:#e8e8ed; --danger:#ff3b30; --amber:#b25e00; --amber-soft:#fff4e5;
+  --radius:20px; font-size:17px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro KR","Apple SD Gothic Neo","Pretendard","Noto Sans KR","Segoe UI",Roboto,sans-serif;
+  background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:-0.015em;line-height:1.5;
+  padding:0 16px calc(48px + env(safe-area-inset-bottom));
+}
+.wrap{max-width:720px;margin:0 auto}
+header{padding:36px 0 20px;text-align:center}
+header .eyebrow{font-size:.8rem;color:var(--green);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+header h1{font-size:1.55rem;font-weight:800;letter-spacing:-0.03em;margin-top:6px}
+header p{color:var(--ink-3);font-size:.92rem;margin-top:6px}
+.card{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);margin-bottom:14px}
+label{display:block;font-size:.82rem;font-weight:700;color:var(--ink-2);margin-bottom:8px}
+input,textarea{
+  width:100%;font:inherit;padding:13px 15px;border:1.5px solid var(--line);border-radius:14px;background:#fafafa;color:var(--ink);outline:none;
+  transition:border-color .15s,background .15s;
+}
+input:focus,textarea:focus{border-color:var(--green);background:#fff}
+textarea{resize:vertical;min-height:72px;line-height:1.45}
+.pin{font-size:1.9rem;letter-spacing:.45em;text-align:center;padding:16px;font-variant-numeric:tabular-nums}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-weight:700;border:0;cursor:pointer;
+  padding:13px 20px;border-radius:14px;background:var(--green-deep);color:#fff;transition:transform .08s,opacity .15s;white-space:nowrap;
+}
+.btn:active{transform:scale(.97)} .btn[disabled]{opacity:.45;cursor:default}
+.btn.ghost{background:var(--green-soft);color:var(--green-deep)}
+.btn.sm{padding:9px 14px;font-size:.88rem;border-radius:11px}
+.btn.block{width:100%;margin-top:14px}
+.hint{font-size:.8rem;color:var(--ink-3);margin-top:8px;line-height:1.5}
+.msg{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:.88rem;line-height:1.5;display:none;white-space:pre-line}
+.msg.ok{display:block;background:var(--green-soft);color:var(--green-deep)}
+.msg.err{display:block;background:#ffe9e7;color:#b3261e}
+.msg.warn{display:block;background:var(--amber-soft);color:var(--amber)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.chip{display:inline-block;padding:5px 11px;border-radius:999px;background:var(--green-soft);color:var(--green-deep);font-size:.8rem;font-weight:700}
+.row{padding:16px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0;padding-top:0}
+.row-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.row-head b{font-size:1.02rem}
+.row-head .pinbox{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--ink-2)}
+.row-head .pinbox code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#f2f2f5;padding:3px 8px;border-radius:8px;font-size:.9rem;letter-spacing:.12em;color:var(--ink)}
+.row-head .pinbox button{font:inherit;font-size:.78rem;color:var(--green);background:none;border:0;cursor:pointer;font-weight:700}
+.row-body{display:flex;gap:8px;align-items:flex-start}
+.row-body textarea{min-height:48px;flex:1}
+.row .msg{margin-top:8px}
+.status{font-size:.75rem;color:var(--ink-3);margin-top:4px}
+.status.filled{color:var(--green)}
+.search{margin-bottom:12px}
+.hidden{display:none !important}
+.foot{text-align:center;color:var(--ink-3);font-size:.78rem;margin-top:22px;line-height:1.6}
+@media (max-width:480px){ .row-body{flex-direction:column} .row-body .btn{width:100%} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">경기도청년새마을연합회</div>
+    <h1>가입신청 담당자 관리</h1>
+    <p>시·군별 가입신청 알림을 받을 담당자 메일을 등록·수정합니다.</p>
+  </header>
+
+  <!-- 1. PIN -->
+  <section class="card" id="loginCard">
+    <label for="pin">PIN (숫자 4자리)</label>
+    <input id="pin" class="pin" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="one-time-code" placeholder="••••" autofocus>
+    <button class="btn block" id="loginBtn">확인</button>
+    <div class="hint">시·군 담당자 PIN은 연합회에서 받은 4자리 번호입니다. 5회 틀리면 10분간 잠깁니다.</div>
+    <div class="msg" id="loginMsg"></div>
+  </section>
+
+  <!-- 2. 시군 담당자 화면 -->
+  <section class="card hidden" id="regionCard">
+    <div class="topbar">
+      <span class="chip" id="regionChip"></span>
+      <button class="btn ghost sm" id="logout1">나가기</button>
+    </div>
+    <label for="regionEmails">담당자 메일 주소</label>
+    <textarea id="regionEmails" placeholder="예) hong@naver.com, kim@gmail.com"></textarea>
+    <div class="hint">여러 명이면 쉼표(,)로 구분 · 최대 5개 · 저장하면 등록된 주소로 확인 메일이 바로 발송됩니다.<br>가입신청이 들어오면 접수 즉시 이 주소로 알림이 갑니다.</div>
+    <button class="btn block" id="regionSave">저장하고 확인 메일 보내기</button>
+    <div class="msg" id="regionMsg"></div>
+  </section>
+
+  <!-- 3. 관리자 화면 -->
+  <section class="card hidden" id="adminCard">
+    <div class="topbar">
+      <span class="chip">관리자 · <span id="adminCount"></span></span>
+      <button class="btn ghost sm" id="logout2">나가기</button>
+    </div>
+    <input id="search" class="search" placeholder="시·군 검색" autocomplete="off">
+    <div class="hint" style="margin:0 0 10px">PIN은 각 시·군 담당자에게 전달하는 번호입니다. 바꾸기를 누르면 새 4자리로 변경됩니다.</div>
+    <div id="adminRows"></div>
+  </section>
+
+  <div class="foot">문의: 경기도청년새마을연합회 사무국</div>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxm8hsBB8mqANklVvDL4yFjJOqdR70RHIN8V1-48h3eHLjlXLZgtVT-Kfv4rEvl0hVJ/exec';
+const $ = (id) => document.getElementById(id);
+let PIN = '';
+
+async function api(payload) {
+  payload.action = 'admin';
+  payload.pin = PIN;
+  const res = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+function show(el, cls, text) { el.className = 'msg ' + cls; el.textContent = text; }
+function busy(btn, on, label) { btn.disabled = on; if (label) btn.textContent = label; }
+function testSummary(t) {
+  if (!t) return '';
+  if (t.ok) return '\n확인 메일 발송됨 → ' + t.sent.join(', ');
+  return '\n확인 메일 일부 실패: ' + (t.failed || []).join(' / ') + (t.sent && t.sent.length ? '\n발송됨 → ' + t.sent.join(', ') : '');
+}
+
+// ── 로그인 ───────────────────────────
+async function login() {
+  const v = $('pin').value.trim();
+  if (!/^\d{4}$/.test(v)) { show($('loginMsg'), 'err', '숫자 4자리를 입력하세요'); return; }
+  PIN = v;
+  busy($('loginBtn'), true, '확인 중…');
+  try {
+    const r = await api({ op: 'login' });
+    if (!r.ok) { PIN = ''; show($('loginMsg'), 'err', r.message || '실패'); return; }
+    try { sessionStorage.setItem('pin', PIN); } catch (e) {}
+    $('loginCard').classList.add('hidden');
+    if (r.role === 'admin') renderAdmin(r.rows); else renderRegion(r.region, r.rows[0]);
+  } catch (e) {
+    PIN = ''; show($('loginMsg'), 'err', '서버 연결 실패. 잠시 후 다시 시도하세요.\n' + e.message);
+  } finally { busy($('loginBtn'), false, '확인'); }
+}
+$('loginBtn').addEventListener('click', login);
+$('pin').addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+$('pin').addEventListener('input', (e) => { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4); });
+
+function logout() {
+  PIN = ''; try { sessionStorage.removeItem('pin'); } catch (e) {}
+  location.reload();
+}
+$('logout1').addEventListener('click', logout);
+$('logout2').addEventListener('click', logout);
+
+// ── 시군 담당자 ───────────────────────
+function renderRegion(region, row) {
+  $('regionChip').textContent = region + ' 담당자';
+  $('regionEmails').value = (row && row.emails) ? row.emails.split(',').join(', ') : '';
+  $('regionCard').classList.remove('hidden');
+  $('regionSave').onclick = async () => {
+    busy($('regionSave'), true, '저장 중…');
+    show($('regionMsg'), '', '');
+    try {
+      const r = await api({ op: 'save', region: region, emails: $('regionEmails').value, sendTest: true });
+      if (!r.ok) { show($('regionMsg'), 'err', r.message || '저장 실패'); return; }
+      $('regionEmails').value = r.emails.split(',').filter(Boolean).join(', ');
+      show($('regionMsg'), (r.test && !r.test.ok) ? 'warn' : 'ok',
+        (r.emails ? '저장 완료: ' + r.emails.split(',').join(', ') : '담당자 메일을 비웠습니다 (이 시·군은 연합회 기본 수신자에게만 알림)') + testSummary(r.test));
+    } catch (e) { show($('regionMsg'), 'err', '서버 연결 실패: ' + e.message); }
+    finally { busy($('regionSave'), false, '저장하고 확인 메일 보내기'); }
+  };
+}
+
+// ── 관리자 ───────────────────────────
+function renderAdmin(rows) {
+  $('adminCard').classList.remove('hidden');
+  const filled = rows.filter(r => r.emails).length;
+  $('adminCount').textContent = '등록 ' + filled + ' / ' + rows.length;
+  const box = $('adminRows');
+  box.innerHTML = '';
+  rows.forEach((r) => {
+    const div = document.createElement('div');
+    div.className = 'row';
+    div.dataset.region = r.region;
+    div.innerHTML =
+      '<div class="row-head"><b></b><span class="pinbox">PIN <code></code><button type="button" class="chg">바꾸기</button></span></div>' +
+      '<div class="row-body"><textarea placeholder="담당자 메일 (쉼표로 여러 명)"></textarea>' +
+      '<button class="btn sm save">저장+확인메일</button><button class="btn ghost sm test">확인메일만</button></div>' +
+      '<div class="status"></div><div class="msg"></div>';
+    div.querySelector('b').textContent = r.region;
+    div.querySelector('code').textContent = r.pin || '—';
+    const ta = div.querySelector('textarea');
+    ta.value = r.emails ? r.emails.split(',').join(', ') : '';
+    const st = div.querySelector('.status');
+    const setStatus = (emails) => { st.textContent = emails ? '등록됨' : '미등록 — 연합회 기본 수신자에게만 알림'; st.className = 'status' + (emails ? ' filled' : ''); };
+    setStatus(r.emails);
+    const msg = div.querySelector('.msg');
+    const saveBtn = div.querySelector('.save'), testBtn = div.querySelector('.test');
+
+    saveBtn.onclick = async () => {
+      busy(saveBtn, true, '저장 중…'); show(msg, '', '');
+      try {
+        const res = await api({ op: 'save', region: r.region, emails: ta.value, sendTest: true });
+        if (!res.ok) { show(msg, 'err', res.message || '저장 실패'); return; }
+        ta.value = res.emails.split(',').filter(Boolean).join(', ');
+        setStatus(res.emails);
+        show(msg, (res.test && !res.test.ok) ? 'warn' : 'ok', (res.emails ? '저장 완료' : '비움 저장') + testSummary(res.test));
+        rows.find(x => x.region === r.region).emails = res.emails;
+        $('adminCount').textContent = '등록 ' + rows.filter(x => x.emails).length + ' / ' + rows.length;
+      } catch (e) { show(msg, 'err', '서버 연결 실패: ' + e.message); }
+      finally { busy(saveBtn, false, '저장+확인메일'); }
+    };
+    testBtn.onclick = async () => {
+      busy(testBtn, true, '발송 중…'); show(msg, '', '');
+      try {
+        const res = await api({ op: 'test', region: r.region });
+        show(msg, res.ok ? 'ok' : 'warn', res.ok ? '확인 메일 발송됨 → ' + res.sent.join(', ') : (res.message || '실패: ' + (res.failed || []).join(' / ')));
+      } catch (e) { show(msg, 'err', '서버 연결 실패: ' + e.message); }
+      finally { busy(testBtn, false, '확인메일만'); }
+    };
+    div.querySelector('.chg').onclick = async () => {
+      const np = prompt(r.region + ' 새 PIN (숫자 4자리)', '');
+      if (np === null) return;
+      if (!/^\d{4}$/.test(np.trim())) { show(msg, 'err', 'PIN은 숫자 4자리'); return; }
+      try {
+        const res = await api({ op: 'setPin', region: r.region, newPin: np.trim() });
+        if (!res.ok) { show(msg, 'err', res.message || '변경 실패'); return; }
+        div.querySelector('code').textContent = res.pin;
+        show(msg, 'ok', 'PIN 변경 완료: ' + res.pin);
+      } catch (e) { show(msg, 'err', '서버 연결 실패: ' + e.message); }
+    };
+    box.appendChild(div);
+  });
+  $('search').oninput = (e) => {
+    const q = e.target.value.trim();
+    box.querySelectorAll('.row').forEach(d => { d.classList.toggle('hidden', q && !d.dataset.region.includes(q)); });
+  };
+}
+
+// 세션 복원
+(function () {
+  let saved = '';
+  try { saved = sessionStorage.getItem('pin') || ''; } catch (e) {}
+  if (/^\d{4}$/.test(saved)) { $('pin').value = saved; login(); }
+})();
+</script>
+</body>
+</html>
