@@ -104,6 +104,7 @@ textarea{resize:vertical;min-height:72px;line-height:1.45}
       <span class="chip">관리자 · <span id="adminCount"></span></span>
       <button class="btn ghost sm" id="logout2">나가기</button>
     </div>
+    <div class="hint hidden" id="quota" style="margin:-4px 0 10px"></div>
     <input id="search" class="search" placeholder="시·군 검색" autocomplete="off">
     <div class="hint" style="margin:0 0 10px">PIN은 각 시·군 담당자에게 전달하는 번호입니다. 바꾸기를 누르면 새 4자리로 변경됩니다.</div>
     <div id="adminRows"></div>
@@ -143,7 +144,7 @@ async function login() {
     if (!r.ok) { PIN = ''; show($('loginMsg'), 'err', r.message || '실패'); return; }
     try { sessionStorage.setItem('pin', PIN); } catch (e) {}
     $('loginCard').classList.add('hidden');
-    if (r.role === 'admin') renderAdmin(r.rows); else renderRegion(r.region, r.rows[0]);
+    if (r.role === 'admin') renderAdmin(r.rows, r.quota); else renderRegion(r.region, r.rows[0]);
   } catch (e) {
     PIN = ''; show($('loginMsg'), 'err', '서버 연결 실패. 잠시 후 다시 시도하세요.\n' + e.message);
   } finally { busy($('loginBtn'), false, '확인'); }
@@ -179,10 +180,18 @@ function renderRegion(region, row) {
 }
 
 // ── 관리자 ───────────────────────────
-function renderAdmin(rows) {
+function renderAdmin(rows, quota) {
   $('adminCard').classList.remove('hidden');
   const filled = rows.filter(r => r.emails).length;
   $('adminCount').textContent = '등록 ' + filled + ' / ' + rows.length;
+  if (quota) {
+    const q = $('quota');
+    q.textContent = quota.brevoOn
+      ? '오늘 발송 — Brevo ' + quota.brevoToday + '통 (남은 한도 ' + (quota.brevoLeft == null ? '?' : quota.brevoLeft) + '/300)'
+        + ' · 지메일 폴백 ' + quota.gmailToday + '/' + quota.gmailLimit
+      : '오늘 발송 — 지메일 ' + quota.gmailToday + '/' + quota.gmailLimit + ' (Brevo 미연결)';
+    q.classList.remove('hidden');
+  }
   const box = $('adminRows');
   box.innerHTML = '';
   rows.forEach((r) => {
