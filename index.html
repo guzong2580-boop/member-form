@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src https://script.google.com https://*.googleusercontent.com; base-uri 'none'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'self'">
 <meta name="referrer" content="no-referrer">
 <title>청년새마을연대 가입 신청 — 경기도청년새마을연합회</title>
 <meta name="description" content="경기도청년새마을연합회 회원 가입 신청서. 시·군을 선택해 소속 청년새마을연대에 가입하세요.">
@@ -23,6 +23,9 @@
   --card:#ffffff;
   --line:#e8e8ed;
   --danger:#ff3b30;
+  --danger-ink:#c0271c;
+  --danger-soft:#fdeceb;
+  --danger-line:#f4c4bf;
   --radius:20px;
   font-size:17px;
 }
@@ -34,6 +37,7 @@ body{
   -webkit-font-smoothing:antialiased;
   letter-spacing:-0.015em;
   line-height:1.5;
+  word-break:keep-all;overflow-wrap:break-word;
 }
 /* ── nav ─────────────────────────── */
 .nav{
@@ -105,10 +109,14 @@ input:focus,textarea:focus{
 input::placeholder{color:#b0b0b6}
 .addr-detail{margin-top:8px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:480px){.row{grid-template-columns:1fr}}
+.row>.field{margin-bottom:20px}
+@media(max-width:480px){.row{grid-template-columns:1fr;gap:0}}
 /* segmented control */
-.seg{display:flex;background:var(--bg);border-radius:14px;padding:4px;gap:4px}
-.seg input{display:none}
+.seg{position:relative;display:flex;background:var(--bg);border-radius:14px;padding:4px;gap:4px}
+/* 라디오는 눈에만 숨긴다(display:none 이면 포커스·키보드 선택·오류 안내가 모두 막힌다) */
+.seg input{position:absolute;top:0;left:0;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}
+.seg input:focus-visible+label{outline:3px solid rgba(46,125,70,.45);outline-offset:2px}
+.seg[aria-invalid=true]{box-shadow:inset 0 0 0 1.5px var(--danger-ink)}
 .seg label{
   flex:1;text-align:center;font-size:16px;font-weight:500;color:var(--ink-2);
   padding:11px 0;border-radius:11px;cursor:pointer;
@@ -124,7 +132,18 @@ input::placeholder{color:#b0b0b6}
   padding:4px 12px;border-radius:999px;width:fit-content;
 }
 .age-chip.show{display:inline-block;animation:pop .3s cubic-bezier(.3,1.4,.5,1)}
+.age-chip.bad{color:var(--danger-ink);background:var(--danger-soft);border-color:var(--danger-line)}
 @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+/* 인라인 오류 (aria-live — 비어 있어도 렌더링해 두어야 스크린리더가 변화를 읽는다) */
+.field-err{font-size:14px;font-weight:600;color:var(--danger-ink);line-height:1.5}
+.field-err:not(:empty){margin-top:8px}
+input[aria-invalid=true],select[aria-invalid=true]{border-color:var(--danger-ink)}
+.form-msg{font-size:15px;font-weight:600;color:var(--danger-ink);line-height:1.55;text-align:center}
+.form-msg:not(:empty){margin-bottom:14px;padding:13px 16px;background:var(--danger-soft);border:1px solid var(--danger-line);border-radius:14px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* 테스트 모드 띠 (?dryrun=1) */
+.testband{background:#ffd60a;color:#1d1d1f;font-size:14px;font-weight:700;text-align:center;padding:9px 16px;line-height:1.4;border-bottom:2px solid #c9a700}
+.testband[hidden]{display:none}
 /* ── privacy ──────────────────────── */
 .privacy-box{
   background:var(--bg);border-radius:14px;padding:18px 18px;
@@ -133,6 +152,29 @@ input::placeholder{color:#b0b0b6}
 }
 .privacy-box strong{color:var(--ink);display:block;margin-bottom:2px}
 .privacy-box ol{padding-left:18px;display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.privacy-box ul{padding-left:16px;margin-top:4px;display:flex;flex-direction:column;gap:4px}
+.privacy-box .sub{color:var(--ink-3)}
+.controller{font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:-8px 0 18px}
+.consent-item{margin-bottom:16px}
+/* 동의 시 반드시 알려야 할 핵심 사항(보유기간·제공받는 자·제공 목적) — 접지 않고, 세부 내용(13.5px)보다 크고 굵게 */
+.consent-key{margin-top:10px;padding:14px 16px;background:#fff;border:1.5px solid var(--green-line);border-radius:14px;
+  font-size:16px;line-height:1.6;color:var(--ink);display:flex;flex-direction:column;gap:10px}
+.consent-key dt{font-weight:700;color:var(--green-deep)}
+.consent-key dd{margin:0}
+.consent-key b{font-weight:700;text-decoration:underline;text-decoration-color:var(--green);text-underline-offset:3px}
+.consent-more{margin-top:8px}
+.consent-more summary{
+  display:inline-block;font-size:14px;font-weight:600;color:var(--green);
+  padding:6px 4px;cursor:pointer;list-style:none;border-radius:8px;
+}
+.consent-more summary::-webkit-details-marker{display:none}
+.consent-more summary::after{content:'';display:inline-block;width:7px;height:7px;margin-left:7px;
+  border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-3px) rotate(45deg);transition:transform .2s}
+.consent-more[open] summary::after{transform:translateY(0) rotate(-135deg)}
+.consent-more summary:focus-visible{outline:3px solid rgba(46,125,70,.45);outline-offset:2px}
+.consent-more .privacy-box{max-height:none;margin:6px 0 0}
+.policy-link{margin-top:4px;font-size:14px;text-align:right}
+.policy-link a{color:var(--green-deep);font-weight:700}
 .consent{
   display:flex;align-items:center;justify-content:space-between;gap:14px;
   padding:16px 18px;background:var(--green-soft);border:1px solid var(--green-line);
@@ -140,9 +182,12 @@ input::placeholder{color:#b0b0b6}
 }
 .consent .txt{font-size:15.5px;font-weight:600;color:var(--green-deep)}
 .consent .txt small{display:block;font-size:12.5px;font-weight:500;color:var(--green);margin-top:1px}
-/* apple switch */
+.consent .txt .must{color:var(--danger-ink)}
+.consent:has(input[aria-invalid=true]){border-color:var(--danger-ink);background:var(--danger-soft)}
+/* apple switch — 체크박스는 숨기되 키보드 포커스·스크린리더는 살린다 */
 .switch{position:relative;width:51px;height:31px;flex-shrink:0}
-.switch input{display:none}
+.switch input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:1}
+.switch input:focus-visible~.track{outline:3px solid rgba(46,125,70,.45);outline-offset:2px}
 .switch .track{position:absolute;inset:0;background:#d5d5da;border-radius:999px;transition:background .25s}
 .switch .knob{
   position:absolute;top:2px;left:2px;width:27px;height:27px;background:#fff;border-radius:50%;
@@ -167,6 +212,7 @@ input::placeholder{color:#b0b0b6}
 .btn:active{transform:scale(.98)}
 .btn:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
 .footer{max-width:720px;margin:0 auto;padding:0 24px 60px;text-align:center;font-size:12.5px;color:var(--ink-3);line-height:1.7}
+.footer .policy{color:var(--ink-2);font-weight:700}
 .footer .adminlink{display:inline-block;margin-top:10px;padding:7px 14px;border:1.5px solid var(--green-line);border-radius:999px;color:var(--green);font-weight:700;text-decoration:none;background:#fff}
 /* ── success overlay ──────────────── */
 .overlay{
@@ -194,6 +240,15 @@ input::placeholder{color:#b0b0b6}
 @keyframes draw{to{stroke-dashoffset:0}}
 .done-card h3{font-size:24px;font-weight:700;letter-spacing:-0.02em;margin-bottom:10px}
 .done-card p{font-size:15.5px;color:var(--ink-3);line-height:1.6;margin-bottom:28px}
+.done-card h3:focus{outline:none}
+.done-card{max-height:calc(100vh - 48px);overflow-y:auto}
+.done-card .test-note{display:block;margin:-14px 0 22px;padding:10px 12px;font-size:13.5px;font-weight:700;line-height:1.5;color:#1d1d1f;background:#fff3b0;border:1px solid #e6c700;border-radius:12px}
+.done-card .test-note.warn{color:var(--danger-ink);background:var(--danger-soft);border-color:var(--danger-line)}
+.done-card .test-note[hidden]{display:none}
+.done-actions{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.done-actions a{display:block;font-size:16px;font-weight:700;text-decoration:none;padding:13px 18px;border-radius:999px}
+.done-actions .primary{color:#fff;background:linear-gradient(135deg,#2e7d46,#1e4d2b);box-shadow:0 6px 18px rgba(30,77,43,.25)}
+.done-actions .ghost{color:var(--green-deep);background:#fff;border:1.5px solid var(--green-line)}
 .done-card button{
   font:inherit;font-size:16px;font-weight:600;color:var(--green-deep);
   background:var(--green-soft);border:1px solid var(--green-line);
@@ -206,6 +261,7 @@ input::placeholder{color:#b0b0b6}
 <body>
 
 <nav class="nav">
+  <div class="testband" id="testBand" role="status" hidden>테스트 모드 — 제출해도 저장·발송되지 않습니다</div>
   <div class="nav-inner">
     <span class="nav-title">경기도청년새마을연합회</span>
     <span class="nav-badge">가입 신청</span>
@@ -226,10 +282,11 @@ input::placeholder{color:#b0b0b6}
     <h2>가입 지역 선택</h2>
     <p class="hint">거주하시거나 활동할 시·군을 선택해 주세요 — 해당 시·군 청년새마을연대로 가입됩니다</p>
     <div class="region-wrap">
-      <select id="region" name="region" required>
+      <select id="region" name="region" required aria-label="가입 시·군" aria-describedby="regionErr">
         <option value="" selected disabled>시·군 선택</option>
       </select>
     </div>
+    <p class="field-err" id="regionErr" aria-live="polite"></p>
   </section>
 
   <!-- 소속 -->
@@ -264,15 +321,18 @@ input::placeholder{color:#b0b0b6}
     <div class="row">
       <div class="field">
         <label class="lbl">성별<span class="req">*</span></label>
-        <div class="seg">
+        <div class="seg" id="genderSeg" role="radiogroup" aria-label="성별" aria-describedby="genderErr">
           <input type="radio" id="gM" name="gender" value="남성" required><label for="gM">남성</label>
           <input type="radio" id="gF" name="gender" value="여성"><label for="gF">여성</label>
         </div>
+        <p class="field-err" id="genderErr" aria-live="polite"></p>
       </div>
       <div class="field">
         <label class="lbl" for="birthdate">생년월일<span class="req">*</span></label>
-        <input type="date" id="birthdate" name="birthdate" required>
+        <input type="date" id="birthdate" name="birthdate" required aria-describedby="birthHint birthErr">
         <span class="age-chip" id="ageChip"></span>
+        <p class="sr-only" id="birthHint">가입 대상은 만 19세~45세 청년입니다.</p>
+        <p class="field-err" id="birthErr" aria-live="polite"></p>
       </div>
     </div>
 
@@ -290,7 +350,7 @@ input::placeholder{color:#b0b0b6}
     <div class="field">
       <label class="lbl" for="dong">주소 — 읍·면·동 + 상세주소<span class="req">*</span></label>
       <div class="region-wrap">
-        <select id="dong" name="dong" required disabled>
+        <select id="dong" name="dong" required disabled aria-describedby="dongErr">
           <option value="" selected disabled>먼저 위에서 시·군을 선택해 주세요</option>
         </select>
       </div>
@@ -298,28 +358,75 @@ input::placeholder{color:#b0b0b6}
              placeholder="상세주소 (예: 중리대로 123, ○○아파트 101동 1001호)"
              autocomplete="address-line1" maxlength="80">
       <span class="age-chip" id="addrChip"></span>
+      <p class="field-err" id="dongErr" aria-live="polite"></p>
     </div>
   </section>
 
-  <!-- 개인정보 동의 -->
-  <section class="card">
-    <h2>개인정보 수집·이용 동의</h2>
-    <p class="hint">아래 내용을 확인하신 후 동의해 주세요</p>
-    <div class="privacy-box">
-      <ol>
-        <li><strong>개인정보의 수집·이용 목적</strong>청년새마을연대 회원 등록 및 관리</li>
-        <li><strong>수집하는 개인정보의 항목</strong>성명, 생년월일, 소속(가입 지역), 주소, 연락처(휴대전화), 주요경력</li>
-        <li><strong>개인정보의 보유 및 이용기간</strong>등록일로부터 청년새마을연대 탈퇴 시까지</li>
-        <li><strong>동의를 거부할 권리</strong>귀하는 위와 같은 개인정보를 수집·이용하는 데에 대한 동의를 거부할 권리가 있습니다. 다만 동의를 거부하실 경우 회원 가입이 제한될 수 있습니다.</li>
-      </ol>
+  <!-- 개인정보 동의 (2026-10-01 v30: 수집·이용 / 제3자 제공 분리, 처리방침 https://youthsaemaul.or.kr/privacy 와 내용 일치) -->
+  <section class="card" aria-labelledby="consentTitle">
+    <h2 id="consentTitle">개인정보 동의</h2>
+    <p class="hint">가입 신청에는 아래 두 가지 동의가 모두 필요합니다. ‘내용 보기’를 눌러 자세한 내용을 확인해 주세요.</p>
+    <p class="controller">개인정보처리자 이천시청년새마을연대(경기도 31개 시·군 공용 가입신청서 운영) · 개인정보 보호책임자 회장 최병무 (icheonbird@gmail.com)</p>
+
+    <div class="consent-item">
+      <label class="consent" for="consentPrivacy">
+        <span class="txt"><span class="must">[필수]</span> 개인정보 수집·이용 동의<small>회원 가입 처리·회원 관리 목적</small></span>
+        <span class="switch">
+          <input type="checkbox" id="consentPrivacy" name="consentPrivacy" aria-describedby="consentPrivacyKey consentPrivacyErr">
+          <span class="track" aria-hidden="true"></span><span class="knob" aria-hidden="true"></span>
+        </span>
+      </label>
+      <p class="field-err" id="consentPrivacyErr" aria-live="polite"></p>
+      <dl class="consent-key" id="consentPrivacyKey">
+        <div><dt>보유·이용 기간</dt><dd>회원 정보는 <b>회원 탈퇴 시까지</b>(탈퇴하면 지체 없이 파기), 가입이 이뤄지지 않은 신청 정보는 <b>접수일로부터 1년이 지나면 파기</b>합니다.</dd></div>
+      </dl>
+      <details class="consent-more">
+        <summary>내용 보기<span class="sr-only"> — 개인정보 수집·이용 동의</span></summary>
+        <div class="privacy-box">
+          <ol>
+            <li><strong>수집·이용 목적</strong>청년새마을연대 회원 가입 처리(신청 내용 확인, 가입 자격 만 19세~45세 확인, 중복·자동 입력 신청 방지), 회원 관리(회원명부 작성·관리, 회원 연락, 회의·봉사활동·행사 안내)</li>
+            <li><strong>수집 항목</strong>(필수) 가입 시·군, 성명, 성별, 생년월일, 연락처(휴대전화), 주소(읍·면·동)<br>(선택) 상세주소, 이메일 — 입력하지 않아도 신청할 수 있습니다.<br><span class="sub">(자동 생성) 신청 일시, 동의 기록(동의 여부와 동의 문구 버전), 유입 경로, 신청서 작성 시작 시각(자동 입력 방지 확인용)</span></li>
+            <li><strong>처리 위탁·국외 이전</strong>신청서는 제출하는 즉시 암호화된 네트워크 통신으로 아래 해외 업체에 전송되어 저장·알림에 쓰입니다.
+              <ul>
+                <li>Google LLC(미국 등) — 신청 정보 저장(구글 스프레드시트), 접수 프로그램 운영, 알림 메일 대체 발송 · 위 항목 전체 · 회원 탈퇴 시까지(가입이 이뤄지지 않은 신청은 접수일로부터 1년)</li>
+                <li>Notion Labs, Inc.(미국) — 회원명부 저장·관리 · 가입 시·군, 성명, 성별, 생년월일, 연락처, 이메일(입력한 경우), 주소 · 회원 탈퇴 시까지(가입이 이뤄지지 않은 신청은 접수일로부터 1년)</li>
+                <li>Sendinblue SAS(서비스명 Brevo, 프랑스) — 가입신청 알림 메일 발송 · 같은 항목 · 메일 발송을 마칠 때까지</li>
+                <li>Telegram Messenger Inc.(여러 국가에 분산, 위치 비공개) — 이천시청년새마을연대 홍보차장(가입신청 시스템 운영 담당)에게 접수 알림 · 가입 시·군, 성명, 성별, 생년월일, 연락처, 이메일(입력한 경우), 주소, 유입 경로 · 회원 탈퇴 시까지(가입이 이뤄지지 않은 신청은 접수일로부터 1년)</li>
+              </ul>
+            </li>
+            <li><strong>동의를 거부할 권리</strong>동의를 거부할 권리가 있습니다. 다만 동의하지 않으면 가입 신청이 접수되지 않습니다.</li>
+          </ol>
+        </div>
+      </details>
     </div>
-    <label class="consent" for="privacy">
-      <span class="txt">위의 내용에 동의합니다<small>개인정보 수집·이용 동의 (필수)</small></span>
-      <span class="switch">
-        <input type="checkbox" id="privacy" required>
-        <span class="track"></span><span class="knob"></span>
-      </span>
-    </label>
+
+    <div class="consent-item">
+      <label class="consent" for="consentThirdParty">
+        <span class="txt"><span class="must">[필수]</span> 개인정보 제3자 제공 동의<small>경기도새마을회와 신청하신 시·군 청년새마을연대 담당자에게 전달</small></span>
+        <span class="switch">
+          <input type="checkbox" id="consentThirdParty" name="consentThirdParty" aria-describedby="consentThirdPartyKey consentThirdPartyErr">
+          <span class="track" aria-hidden="true"></span><span class="knob" aria-hidden="true"></span>
+        </span>
+      </label>
+      <p class="field-err" id="consentThirdPartyErr" aria-live="polite"></p>
+      <dl class="consent-key" id="consentThirdPartyKey">
+        <div><dt>제공받는 자</dt><dd><b>① 경기도새마을회</b><br><b>② 신청자가 선택한 시·군 청년새마을연대(담당자)</b><span id="tpRegion"></span></dd></div>
+        <div><dt>제공받는 자의 이용 목적</dt><dd>① 경기도 청년새마을연대 회원 가입 현황 파악과 회원 관리<br>② 소속 단체의 회원 가입 처리, 회원 연락·관리</dd></div>
+        <div><dt>제공받는 자의 보유·이용 기간</dt><dd><b>회원 탈퇴 시까지</b>(가입이 이뤄지지 않은 신청은 <b>접수일로부터 1년</b>)</dd></div>
+      </dl>
+      <details class="consent-more">
+        <summary>내용 보기<span class="sr-only"> — 개인정보 제3자 제공 동의</span></summary>
+        <div class="privacy-box">
+          <ol>
+            <li><strong>제공 항목</strong>가입 시·군, 성명, 성별, 생년월일, 연락처, 이메일(입력한 경우), 주소</li>
+            <li><strong>제공 방법</strong>신청서를 제출하는 즉시 위 기관 담당자의 이메일로 신청서 내용이 전달됩니다.</li>
+            <li><strong>동의를 거부할 권리</strong>제3자 제공에 동의하지 않을 수 있습니다. 다만 신청서가 소속 단체에 전달되지 않으면 가입을 처리할 수 없어, 동의하지 않으면 가입 신청이 접수되지 않습니다.</li>
+          </ol>
+        </div>
+      </details>
+    </div>
+
+    <p class="policy-link"><a href="https://youthsaemaul.or.kr/privacy" target="_blank" rel="noopener">개인정보처리방침 전문 보기<span class="sr-only"> (새 창)</span> ↗</a></p>
   </section>
 
   <!-- 선언 + 제출 -->
@@ -331,26 +438,68 @@ input::placeholder{color:#b0b0b6}
       <span class="dest">(사)새마을운동중앙회 귀중</span>
     </p>
     <br>
+    <p class="form-msg" id="formMsg" role="alert"></p>
     <button type="submit" class="btn" id="submitBtn">가입 신청하기</button>
   </section>
 </form>
 
-<p class="footer">경기도청년새마을연합회 · 새마을운동중앙회<br>제출하신 정보는 회원 등록 및 관리 목적으로만 사용됩니다.<br><a href="admin.html" class="adminlink" rel="nofollow">시·군 담당자 메일 등록 (담당자 관리)</a></p>
+<p class="footer">경기도청년새마을연합회 · 새마을운동중앙회<br>제출하신 정보는 위 동의 내용에 따라 회원 가입 처리와 회원 관리에만 사용됩니다.<br><a href="https://youthsaemaul.or.kr/privacy" target="_blank" rel="noopener" class="policy">개인정보처리방침<span class="sr-only"> (새 창)</span></a><br><a href="admin.html" class="adminlink" rel="nofollow">시·군 담당자 메일 등록 (담당자 관리)</a></p>
 
 <!-- 완료 오버레이 -->
-<div class="overlay" id="overlay">
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="doneTitle" aria-describedby="doneMsg">
   <div class="done-card">
-    <div class="check-ring">
+    <div class="check-ring" aria-hidden="true">
       <svg viewBox="0 0 52 52"><path d="M14 27l8 8 16-18"/></svg>
     </div>
-    <h3>신청이 접수되었습니다</h3>
+    <h3 id="doneTitle" tabindex="-1">신청이 접수되었습니다</h3>
     <p id="doneMsg">가입 신청이 정상적으로 접수되었습니다.<br>담당자 확인 후 연락드리겠습니다.</p>
-    <button type="button" onclick="location.reload()">확인</button>
+    <span class="test-note" id="doneTest" hidden></span>
+    <div class="done-actions">
+      <a class="primary" href="https://youthsaemaul.or.kr">홈페이지 보기</a>
+      <a class="ghost" href="https://www.instagram.com/icheonbird/" target="_blank" rel="noopener">인스타그램 팔로우 @icheonbird<span class="sr-only"> (새 창)</span></a>
+    </div>
+    <button type="button" id="doneClose">확인</button>
   </div>
 </div>
 
 <script>
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxm8hsBB8mqANklVvDL4yFjJOqdR70RHIN8V1-48h3eHLjlXLZgtVT-Kfv4rEvl0hVJ/exec';
+
+// ── 가입 API v30 계약 (2026-10-01) ─────────────────────────
+// 동의 2종(수집·이용 / 제3자 제공) + 동의문 버전 + 유입경로 + 작성 시작 시각. 응답을 읽어 ok:true 일 때만 완료.
+// 동의문 내용은 처리방침 https://youthsaemaul.or.kr/privacy 와 일치해야 한다 — 문구를 바꾸면 CONSENT_VERSION 도 올릴 것.
+const CONSENT_VERSION = '2026-10-01';
+const AGE_MIN = 19, AGE_MAX = 45;                 // 가입자격: 만 19~45세 (신청일 기준, KST)
+const MSG_AGE = '가입 대상은 만 19세~45세 청년입니다.';
+const MSG_BIRTH = '생년월일을 정확히 입력해 주세요.';
+const MSG_NET = '전송 결과를 확인하지 못했습니다. 잠시 후 다시 시도해 주세요. 계속 안 되면 icheonbird@gmail.com 으로 연락 주세요.';
+const SUBMIT_TIMEOUT_MS = 45000;
+
+const params = new URLSearchParams(location.search);
+const DRY_RUN = params.get('dryrun') === '1';     // 테스트 모드: 서버가 검증만 하고 저장·발송 생략
+// 유입경로: ?src= (영소문자·숫자·_- 최대 30자, 아니면 ''). 리다이렉트로 src 가 두 번 붙어도 get() 은 첫 값.
+const SRC = (() => {
+  const s = (params.get('src') || '').trim().toLowerCase();
+  return /^[a-z0-9_-]{0,30}$/.test(s) ? s : '';
+})();
+let startedAt = Date.now();                       // 폼 로드 시각 (서버가 3초 미만 제출을 봇으로 본다)
+
+// 인라인 오류 표시 (aria-live 영역에 문장을 넣고 입력칸에 aria-invalid)
+function setErr(field, errEl, msg) {
+  if (errEl.textContent !== msg) errEl.textContent = msg;
+  if (!field) return;
+  if (msg) field.setAttribute('aria-invalid', 'true');
+  else field.removeAttribute('aria-invalid');
+}
+const regionErr = document.getElementById('regionErr');
+const dongErr   = document.getElementById('dongErr');
+const birthErr  = document.getElementById('birthErr');
+const tpRegion  = document.getElementById('tpRegion');
+const genderSeg = document.getElementById('genderSeg');
+const genderErr = document.getElementById('genderErr');
+const MSG_GENDER = '성별을 선택해 주세요.';
+document.querySelectorAll('input[name=gender]').forEach(r =>
+  r.addEventListener('change', () => setErr(genderSeg, genderErr, '')));
 
 // 경기도 31개 시군
 const REGIONS = ['수원시','고양시','용인시','성남시','부천시','화성시','안산시','남양주시','안양시','평택시',
@@ -374,6 +523,7 @@ function fillDong(r) {
   dongSel.disabled = false;
   dongSel.classList.remove('filled');
   addrChip.classList.remove('show');
+  setErr(dongSel, dongErr, '');
   const ph = document.createElement('option');
   ph.value = ''; ph.textContent = r + ' 읍·면·동 선택'; ph.selected = true; ph.disabled = true;
   dongSel.appendChild(ph);
@@ -402,6 +552,7 @@ function paintAddrChip() {
 addrDetail.addEventListener('input', paintAddrChip);
 dongSel.addEventListener('change', () => {
   dongSel.classList.add('filled');
+  setErr(dongSel, dongErr, '');
   paintAddrChip();
 });
 
@@ -409,7 +560,9 @@ const heroLogo = document.getElementById('heroLogo');
 regionSel.addEventListener('change', () => {
   const r = regionSel.value;
   regionSel.classList.add('filled');
+  setErr(regionSel, regionErr, '');
   fillDong(r);
+  tpRegion.textContent = ' — 현재 선택: ' + r + '청년새마을연대';
   document.getElementById('orgOffice').textContent = '새마을운동' + r + '지회';
   document.getElementById('orgName').textContent = r + '청년새마을연대';
   document.getElementById('orgLoc').textContent = '경기도 ' + r;
@@ -417,10 +570,23 @@ regionSel.addEventListener('change', () => {
   document.getElementById('declOrg').textContent = r + '청년새마을연대 회원으로 가입할 것을 신청합니다.';
   heroLogo.style.opacity = '0';
   const img = new Image();
-  img.onload = () => { heroLogo.src = img.src; heroLogo.style.opacity = '1'; };
+  img.onload = () => { heroLogo.src = img.src; heroLogo.alt = r + '청년새마을연대 로고'; heroLogo.style.opacity = '1'; };
   img.onerror = () => { heroLogo.style.opacity = '1'; };
   img.src = 'logos/' + encodeURIComponent(r) + '.png';
 });
+
+// ?region=이천시 → 시군 미리 선택 (목록에 정확히 있을 때만). 기존 change 핸들러로 로고·소속·읍면동까지 갱신.
+const qRegion = (params.get('region') || '').trim();
+if (qRegion && REGIONS.indexOf(qRegion) !== -1) {
+  regionSel.value = qRegion;
+  regionSel.dispatchEvent(new Event('change'));
+}
+
+// 테스트 모드 표시
+if (DRY_RUN) {
+  document.getElementById('testBand').hidden = false;
+  document.title = '[테스트] ' + document.title;
+}
 
 // 오늘 날짜
 const now = new Date();
@@ -436,43 +602,120 @@ phone.addEventListener('input', () => {
   else phone.value = d;
 });
 
-// 생년월일 → 연령 표시
+// 생년월일 → 만 나이 표시 + 가입자격(만 19~45세) 검사. 백엔드 v30 의 parseBirth·ageOn 과 같은 규칙.
 const birth = document.getElementById('birthdate');
 const ageChip = document.getElementById('ageChip');
-birth.addEventListener('change', () => {
-  if (!birth.value) { ageChip.classList.remove('show'); return; }
-  const b = new Date(birth.value);
-  let age = now.getFullYear() - b.getFullYear();
-  const m = now.getMonth() - b.getMonth();
-  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age--;
-  if (age >= 0 && age < 130) {
-    ageChip.textContent = '만 ' + age + '세';
-    ageChip.classList.add('show');
-  } else ageChip.classList.remove('show');
-});
+// 'YYYY-MM-DD'(date 입력) 기본, 'YYYY.MM.DD'·'YYYY/MM/DD'·'YYYYMMDD' 허용. 실재하지 않는 날짜는 null.
+function parseBirth(s) {
+  s = String(s || '').trim();
+  const m = s.match(/^(\d{4})\s*[-.\/]\s*(\d{1,2})\s*[-.\/]\s*(\d{1,2})\.?$/) || s.match(/^(\d{4})(\d{2})(\d{2})$/);
+  if (!m) return null;
+  const y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+  if (y < 1900 || y > 2100 || mo < 1 || mo > 12 || d < 1) return null;
+  if (d > new Date(Date.UTC(y, mo, 0)).getUTCDate()) return null;
+  return { y: y, m: mo, d: d };
+}
+// 신청일(지금) 한국시간 날짜 — 기기 시간대와 무관하게 KST
+function todayKST() {
+  const t = new Date(Date.now() + 9 * 3600 * 1000);
+  return { y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate() };
+}
+// 만 나이. 생일 당일에 한 살 늘어난다(2월 29일생은 평년엔 3월 1일).
+function ageOn(b, t) {
+  let a = t.y - b.y;
+  if (t.m < b.m || (t.m === b.m && t.d < b.d)) a--;
+  return a;
+}
+// strict=false(입력 중): 연도 입력이 덜 끝난 값은 조용히 넘긴다. strict=true(제출): 형식 오류도 알린다.
+// 반환 = '' (통과) | 오류 문장
+function checkAge(strict) {
+  const b = parseBirth(birth.value);
+  const age = b ? ageOn(b, todayKST()) : NaN;
+  if (!b || age < 0 || age > 120) {
+    ageChip.classList.remove('show', 'bad');
+    const msg = (strict === true && birth.value) ? MSG_BIRTH : '';
+    setErr(birth, birthErr, msg);
+    return msg;
+  }
+  const bad = age < AGE_MIN || age > AGE_MAX;
+  ageChip.textContent = '만 ' + age + '세';
+  ageChip.classList.toggle('bad', bad);
+  ageChip.classList.add('show');
+  setErr(birth, birthErr, bad ? MSG_AGE : '');
+  return bad ? MSG_AGE : '';
+}
+birth.addEventListener('change', () => checkAge(false));
+birth.addEventListener('input', () => checkAge(false));
+
+// 동의 체크박스 2종
+const cPrivacy    = document.getElementById('consentPrivacy');
+const cPrivacyErr = document.getElementById('consentPrivacyErr');
+const cThird      = document.getElementById('consentThirdParty');
+const cThirdErr   = document.getElementById('consentThirdPartyErr');
+cPrivacy.addEventListener('change', () => { if (cPrivacy.checked) setErr(cPrivacy, cPrivacyErr, ''); });
+cThird.addEventListener('change', () => { if (cThird.checked) setErr(cThird, cThirdErr, ''); });
 
 // 제출
 const form = document.getElementById('joinForm');
 const btn = document.getElementById('submitBtn');
+const formMsg = document.getElementById('formMsg');
+const overlay = document.getElementById('overlay');
+const BTN_LABEL = DRY_RUN ? '가입 신청하기 (테스트)' : '가입 신청하기';
+btn.textContent = BTN_LABEL;
+let submitting = false;
+
+function failAt(field, errEl, msg) {
+  setErr(field, errEl, msg);
+  field.focus();
+}
+
+// 응답 성공 판정: v30 {ok:true} (v29 {result:'success'} 도 성공으로 본다 — 백엔드보다 폼이 먼저 배포돼도 신청이 막히지 않게)
+function isOk(d) {
+  return !!d && (d.ok === true || (d.ok === undefined && d.result === 'success'));
+}
+
+// 본문 = JSON 문자열, Content-Type 헤더 지정 안 함(text/plain → CORS preflight 없음). 302 → script.googleusercontent.com 따라감.
+async function postSignup(payload) {
+  const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), SUBMIT_TIMEOUT_MS) : null;
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      redirect: 'follow',
+      credentials: 'omit',
+      signal: ctrl ? ctrl.signal : undefined
+    });
+    return await res.json();
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  if (!regionSel.value) {
-    alert('가입할 시·군을 선택해 주세요.');
-    regionSel.focus();
+  if (submitting) return;                          // 이중 클릭·엔터 연타 방지
+  formMsg.textContent = '';
+  if (!regionSel.value) { failAt(regionSel, regionErr, '가입할 시·군을 선택해 주세요.'); return; }
+  if (!dongSel.value)   { failAt(dongSel, dongErr, '주소의 읍·면·동을 선택해 주세요.'); return; }
+  // 성별은 라디오라 브라우저 말풍선이 안 뜨는 기기가 있다 → 인라인 오류를 먼저 깔아 둔다
+  const genderOk = !!form.querySelector('input[name=gender]:checked');
+  setErr(genderSeg, genderErr, genderOk ? '' : MSG_GENDER);
+  if (!form.reportValidity()) {
+    // 빠진 칸이 성별뿐이면 포커스를 직접 옮긴다(브라우저가 라디오로 포커스를 못 옮기는 경우 대비)
+    if (!genderOk && !form.querySelector('input:invalid:not([name=gender]),select:invalid,textarea:invalid')) {
+      document.getElementById('gM').focus();
+    }
     return;
   }
-  if (!dongSel.value) {
-    alert('주소의 읍·면·동을 선택해 주세요.');
-    dongSel.focus();
-    return;
-  }
-  if (!form.reportValidity()) return;
-  if (!document.getElementById('privacy').checked) {
-    alert('개인정보 수집·이용에 동의해 주세요.');
-    return;
-  }
+  if (checkAge(true)) { birth.focus(); return; }
+  if (!cPrivacy.checked) { failAt(cPrivacy, cPrivacyErr, '개인정보 수집·이용에 동의해 주셔야 신청할 수 있습니다.'); return; }
+  if (!cThird.checked)   { failAt(cThird, cThirdErr, '개인정보 제3자 제공에 동의해 주셔야 신청할 수 있습니다.'); return; }
+
+  submitting = true;
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>접수 중…';
+  btn.setAttribute('aria-busy', 'true');
+  btn.innerHTML = '<span class="spinner" aria-hidden="true"></span>접수 중…';
 
   const payload = {
     region:     regionSel.value,
@@ -485,26 +728,91 @@ form.addEventListener('submit', async (e) => {
     address:    fullAddress(),
     job:        '',
     motivation: '',
-    website:    document.getElementById('website').value
+    website:    document.getElementById('website').value,
+    consentPrivacy:    cPrivacy.checked === true,
+    consentThirdParty: cThird.checked === true,
+    consentVersion:    CONSENT_VERSION,
+    src:               SRC,
+    startedAt:         startedAt
   };
+  if (DRY_RUN) payload.dryRun = true;
 
+  let data = null;
   try {
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload)
-    });
-    document.getElementById('doneMsg').innerHTML =
-      regionSel.value + '청년새마을연대 가입 신청이<br>정상적으로 접수되었습니다.<br>담당자 확인 후 연락드리겠습니다.';
-    document.getElementById('overlay').classList.add('show');
+    data = await postSignup(payload);
   } catch (err) {
-    alert('접수 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+    data = null;                                   // 네트워크 오류·시간 초과·JSON 아님
   } finally {
+    submitting = false;
     btn.disabled = false;
-    btn.textContent = '가입 신청하기';
+    btn.removeAttribute('aria-busy');
+    btn.textContent = BTN_LABEL;
   }
+
+  if (isOk(data)) { showDone(data); return; }
+  const serverMsg = (data && data.ok === false && typeof data.message === 'string') ? data.message.trim().slice(0, 200) : '';
+  formMsg.textContent = serverMsg || MSG_NET;
+  if (serverMsg === MSG_AGE) { setErr(birth, birthErr, MSG_AGE); }
 });
+
+// 완료 화면
+function putLines(el, lines) {
+  el.textContent = '';
+  lines.forEach((t, i) => { if (i) el.appendChild(document.createElement('br')); el.appendChild(document.createTextNode(t)); });
+}
+function showDone(d) {
+  const r = regionSel.value;
+  const title = document.getElementById('doneTitle');
+  const msg   = document.getElementById('doneMsg');
+  const note  = document.getElementById('doneTest');
+  const testOk = DRY_RUN && d.dryRun === true;
+  if (d.duplicate === true) {
+    title.textContent = '이미 접수된 신청입니다';
+    putLines(msg, ['같은 연락처로 방금 접수된 신청이 있어', '한 번만 접수했습니다.', '담당자 확인 후 연락드리겠습니다.']);
+  } else if (testOk) {
+    title.textContent = '검증을 통과했습니다';
+    putLines(msg, [r + '청년새마을연대 가입 신청서가', '서버 검증을 통과했습니다.']);
+  } else {
+    title.textContent = '신청이 접수되었습니다';
+    putLines(msg, [r + '청년새마을연대 가입 신청이', '정상적으로 접수되었습니다.', '담당자 확인 후 연락드리겠습니다.']);
+  }
+  if (DRY_RUN) {
+    note.hidden = false;
+    note.className = testOk ? 'test-note' : 'test-note warn';
+    note.textContent = testOk
+      ? '테스트 모드 — 저장·발송되지 않았습니다.'
+      : '주의: 서버가 테스트 모드를 확인해 주지 않았습니다. 실제로 저장·발송되었을 수 있습니다.';
+  } else {
+    note.hidden = true;
+  }
+  overlay.classList.add('show');
+  title.focus();
+}
+
+// '확인' = 새로고침 없이 닫고 폼 초기화 (선택한 시·군은 유지)
+function resetForm() {
+  const r = regionSel.value;
+  form.reset();
+  ageChip.classList.remove('show', 'bad');
+  [[regionSel, regionErr], [dongSel, dongErr], [genderSeg, genderErr], [birth, birthErr], [cPrivacy, cPrivacyErr], [cThird, cThirdErr]]
+    .forEach(([f, el]) => setErr(f, el, ''));
+  formMsg.textContent = '';
+  document.querySelectorAll('.consent-more[open]').forEach(dt => { dt.open = false; });
+  if (r && REGIONS.indexOf(r) !== -1) {
+    regionSel.value = r;
+    regionSel.dispatchEvent(new Event('change'));   // 읍면동 목록·주소 미리보기 초기화
+  }
+  startedAt = Date.now();
+}
+function closeDone() {
+  if (!overlay.classList.contains('show')) return;
+  overlay.classList.remove('show');
+  resetForm();
+  window.scrollTo(0, 0);
+  document.getElementById('name').focus({ preventScroll: true });
+}
+document.getElementById('doneClose').addEventListener('click', closeDone);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDone(); });
 </script>
 </body>
 </html>
